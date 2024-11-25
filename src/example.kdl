@@ -1,0 +1,9 @@
+// This config is in the KDL format: https://kdl.dev
+gpt {
+    base-url "https://example.com"
+    token "token"
+}
+bot {
+    token "token"
+    super-user-id 123
+}
