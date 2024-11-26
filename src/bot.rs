@@ -59,12 +59,22 @@ impl Bot {
             return Ok(());
         };
 
-        if msg.from.as_ref().map(|user| user.id) != Some(self.super_user_id) {
-            tracing::error!("ignore message from non-super user");
-            self.bot
-                .send_message(msg.chat.id, "You are not my master!")
-                .await?;
+        if let Some(user) = msg.from.as_ref() {
+            if self.super_user_id != user.id {
+                tracing::error!("ignore message from non-super user");
 
+                self.bot
+                    .send_message(msg.chat.id, "You are not my master!")
+                    .await?;
+
+                self.bot
+                    .send_message(self.super_user_id, format!("Someone tried to use me! \nUserId: {}\nUsername: {}\nLink: {}", user.id, user.username.clone().unwrap_or("None".to_string()), user.url()))
+                    .await?;
+
+                return Ok(());
+            }
+        } else {
+            tracing::error!("ignore message from non-super user");
             return Ok(());
         }
 
