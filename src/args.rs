@@ -30,19 +30,17 @@ impl Args {
 
     pub fn init_config_path(&self) -> miette::Result<config::SionConfig> {
         match self.config_path {
-            Some(ref path) => config::SionConfig::load(&path).map_err(|e| miette::miette!(e)),
+            Some(ref path) => config::SionConfig::load(path).map_err(|e| miette::miette!(e)),
             None => {
                 let config_path = dirs::config_dir()
                     .expect("failed to get config dir")
                     .join("brain_power/config.kdl");
 
                 if config_path.exists() {
-                    return config::SionConfig::load(&config_path)
-                        .map_err(|e| miette::miette!(e));
+                    return config::SionConfig::load(&config_path).map_err(|e| miette::miette!(e));
                 }
 
-                config::SionConfig::save_default(&config_path)
-                    .map_err(|e| miette::miette!(e))?;
+                config::SionConfig::save_default(&config_path).map_err(|e| miette::miette!(e))?;
 
                 Err(miette::miette!(
                     "no config path provided, default config saved to {}",

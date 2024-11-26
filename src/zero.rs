@@ -6,7 +6,10 @@ use serde::{
     Serialize,
 };
 
-use crate::config::ClientConfig;
+use crate::{
+    config::ClientConfig,
+    models::Model,
+};
 
 #[derive(Debug, Clone)]
 pub struct SionClient {
@@ -40,13 +43,13 @@ impl SionClient {
         }
     }
 
-    pub async fn request_new_hint(&self, content: String) -> anyhow::Result<String> {
+    pub async fn request_new_hint(&self, content: String, model: Model) -> anyhow::Result<String> {
         let request_body = ChatCompletionRequest {
             messages: vec![ChatMessage {
                 role: "user".to_string(),
                 content,
             }],
-            model: "o1-preview".to_string(),
+            model: model.to_string(),
         };
 
         let response = self

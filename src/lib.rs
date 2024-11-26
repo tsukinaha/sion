@@ -5,6 +5,7 @@ mod args;
 mod bot;
 mod cmd;
 mod config;
+mod models;
 mod zero;
 
 fn load_config(args: Args) -> config::SionConfig {

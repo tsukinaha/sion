@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use reqwest::Client;
 use teloxide::{
     dispatching::UpdateFilterExt,
@@ -9,6 +11,7 @@ use teloxide::{
     },
     utils::command::BotCommands,
 };
+use tokio::sync::Mutex;
 
 use crate::{
     cmd::{
@@ -16,6 +19,7 @@ use crate::{
         Command,
     },
     config::SionConfig,
+    models::Model,
     zero,
 };
 
@@ -26,6 +30,7 @@ pub struct Bot {
     bot: teloxide::Bot,
     super_user_id: UserId,
     zero_client: zero::SionClient,
+    model: Arc<Mutex<Model>>,
 }
 
 impl Bot {
@@ -42,6 +47,7 @@ impl Bot {
             bot,
             super_user_id: UserId(config.bot.super_user_id),
             zero_client: zero::SionClient::new(config.gpt),
+            model: Arc::new(Mutex::new(Model::default())),
         }
     }
 
@@ -56,7 +62,7 @@ impl Bot {
         if msg.from.as_ref().map(|user| user.id) != Some(self.super_user_id) {
             tracing::error!("ignore message from non-super user");
             self.bot
-                .send_message(msg.chat.id, "I don't know you.")
+                .send_message(msg.chat.id, "You are not my master!")
                 .await?;
 
             return Ok(());
@@ -65,6 +71,8 @@ impl Bot {
         match cmd {
             Command::Help => self.handle_help_request(msg).await?,
             Command::Meow(prompt) => self.handle_prompt(msg, prompt).await?,
+            Command::Model(model) => self.handle_model(msg, model).await?,
+            Command::LookModel => self.handle_look_model(msg).await?,
         }
 
         Ok(())
@@ -87,18 +95,46 @@ impl Bot {
         }
 
         let gen_msg = self.bot.send_message(msg.chat.id, GENERATING_HINT).await?;
+        let model = *self.model.lock().await;
 
-        let hint = match self.zero_client.request_new_hint(prompt).await {
+        let hint = match self.zero_client.request_new_hint(prompt, model).await {
             Ok(hint) => hint,
             Err(e) => {
                 tracing::error!("failed to generate hint: {e}");
                 format!("Failed to generate hint: {e}")
             }
         };
+
         self.bot
             .edit_message_text(msg.chat.id, gen_msg.id, hint)
             .await?;
         tracing::info!("handle text message");
+        Ok(())
+    }
+
+    async fn handle_model(&self, msg: Message, input: String) -> anyhow::Result<()> {
+        let model = Model::from(input.as_str());
+        if model == Model::Invalid {
+            self.bot.send_message(msg.chat.id, "Invalid model").await?;
+
+            return Ok(());
+        }
+
+        *self.model.lock().await = model;
+        self.bot
+            .send_message(msg.chat.id, format!("Model changed to {model}"))
+            .await?;
+        tracing::info!("model changed to {model}");
+        Ok(())
+    }
+
+    async fn handle_look_model(&self, msg: Message) -> anyhow::Result<()> {
+        let model = self.model.lock().await;
+        let str = model.to_string();
+        self.bot
+            .send_message(msg.chat.id, format!("Current model: {str}"))
+            .await?;
+        tracing::info!("look at the current model");
         Ok(())
     }
 
