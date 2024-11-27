@@ -34,7 +34,7 @@ impl Args {
             None => {
                 let config_path = dirs::config_dir()
                     .expect("failed to get config dir")
-                    .join("brain_power/config.kdl");
+                    .join("sion/config.kdl");
 
                 if config_path.exists() {
                     return config::SionConfig::load(&config_path).map_err(|e| miette::miette!(e));
