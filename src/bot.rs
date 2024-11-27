@@ -135,8 +135,8 @@ impl Bot {
                 "01".to_string(),
                 "Generate",
                 InputMessageContent::Text(InputMessageContentText::new(format!(
-                    "Generated from {}:\n{}",
-                    model.to_string(), hint,
+                    "Question: {}\nGenerated from model {}:\n{}",
+                    query, model.to_string(), hint,
                 ))),
             )
         };
