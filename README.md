@@ -6,6 +6,7 @@ GPT Bot powered by [Github Models](https://github.com/marketplace/models)
 - gpt-4o
 - gpt-4o-mini
 
+> ![](./docs/ss.png)
 
 ### Usage
 #### Build&Run
