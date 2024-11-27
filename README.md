@@ -13,7 +13,7 @@ GPT Bot powered by [Github Models](https://github.com/marketplace/models)
 ```
 cargo build --release
 cd target/release
-./sion
+./sion --config-path /path/to/config.kdl
 ```
 
 #### Commands
@@ -30,7 +30,7 @@ cd target/release
 - /lookmodel
 
 ### Config File
-`$config_dir/sion/config.kdl`
+`$config_dir/sion/config.kdl` if not specified
 
 #### Example
 ```
