@@ -104,16 +104,14 @@ impl Bot {
         let msg = if self.super_user_id != q.from.id {
             tracing::info!("ignore message from non-super user");
             InlineQueryResultArticle::new(
-                "01".to_string(),
+                "01",
                 "You are not my master!",
-                InputMessageContent::Text(InputMessageContentText::new(
-                    "You are not my master!",
-                )),
+                InputMessageContent::Text(InputMessageContentText::new("You are not my master!")),
             )
         } else if !q.query.ends_with("喵") {
             tracing::info!("query does not end with 喵");
             InlineQueryResultArticle::new(
-                "01".to_string(),
+                "01",
                 "Please end your query with 喵",
                 InputMessageContent::Text(InputMessageContentText::new(
                     "Please end your query with 喵",
@@ -132,11 +130,13 @@ impl Bot {
             };
 
             InlineQueryResultArticle::new(
-                "01".to_string(),
+                "01",
                 "Generate",
                 InputMessageContent::Text(InputMessageContentText::new(format!(
                     "Question: {}\nGenerated from model {}:\n{}",
-                    query, model.to_string(), hint,
+                    query,
+                    model,
+                    hint,
                 ))),
             )
         };
