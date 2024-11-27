@@ -1,6 +1,6 @@
 GPT Bot powered by [Github Models](https://github.com/marketplace/models)
 
-### Support Models
+### Supported Models
 - o1-preview 
 - o1-mini
 - gpt-4o
