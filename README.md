@@ -35,11 +35,15 @@ cd target/release
 ```
 // This config is in the KDL format: https://kdl.dev
 gpt {
+    // Here is gpt url, normally https://models.inference.ai.azure.com/chat/completions
     base-url "https://example.com"
+    // Here is your GitHub token.
     token "token"
 }
 bot {
+    // Here is your Telegram Bot token.
     token "token"
+    // Here is your user id.
     super-user-id 123
 }
 ```
