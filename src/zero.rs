@@ -43,11 +43,11 @@ impl SionClient {
         }
     }
 
-    pub async fn request_new_hint(&self, content: String, model: Model) -> anyhow::Result<String> {
+    pub async fn request_new_hint<S: AsRef<str>>(&self, content: S, model: Model) -> anyhow::Result<String> {
         let request_body = ChatCompletionRequest {
             messages: vec![ChatMessage {
                 role: "user".to_string(),
-                content,
+                content: content.as_ref().to_string(),
             }],
             model: model.to_string(),
         };

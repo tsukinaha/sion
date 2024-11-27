@@ -5,6 +5,10 @@ use teloxide::{
     dispatching::UpdateFilterExt,
     prelude::*,
     types::{
+        InlineQueryResult,
+        InlineQueryResultArticle,
+        InputMessageContent,
+        InputMessageContentText,
         Me,
         Message,
         UserId,
@@ -68,7 +72,15 @@ impl Bot {
                     .await?;
 
                 self.bot
-                    .send_message(self.super_user_id, format!("Someone tried to use me! \nUserId: {}\nUsername: {}\nLink: {}", user.id, user.username.clone().unwrap_or("None".to_string()), user.url()))
+                    .send_message(
+                        self.super_user_id,
+                        format!(
+                            "Someone tried to use me! \nUserId: {}\nUsername: {}\nLink: {}",
+                            user.id,
+                            user.username.clone().unwrap_or("None".to_string()),
+                            user.url()
+                        ),
+                    )
                     .await?;
 
                 return Ok(());
@@ -85,6 +97,53 @@ impl Bot {
             Command::LookModel => self.handle_look_model(msg).await?,
         }
 
+        Ok(())
+    }
+
+    async fn handle_inline(&self, q: InlineQuery) -> anyhow::Result<()> {
+        let msg = if self.super_user_id != q.from.id {
+            tracing::info!("ignore message from non-super user");
+            InlineQueryResultArticle::new(
+                "01".to_string(),
+                "You are not my master!",
+                InputMessageContent::Text(InputMessageContentText::new(
+                    "You are not my master!",
+                )),
+            )
+        } else if !q.query.ends_with("喵") {
+            tracing::info!("query does not end with 喵");
+            InlineQueryResultArticle::new(
+                "01".to_string(),
+                "Please end your query with 喵",
+                InputMessageContent::Text(InputMessageContentText::new(
+                    "Please end your query with 喵",
+                )),
+            )
+        } else {
+            tracing::info!("generating");
+            let query = q.query.trim_end_matches("喵");
+            let model = *self.model.lock().await;
+            let hint = match self.zero_client.request_new_hint(query, model).await {
+                Ok(hint) => hint,
+                Err(e) => {
+                    tracing::error!("failed to generate hint: {e}");
+                    format!("Failed to generate hint: {e}")
+                }
+            };
+
+            InlineQueryResultArticle::new(
+                "01".to_string(),
+                "Generate",
+                InputMessageContent::Text(InputMessageContentText::new(format!(
+                    "Generated from {}:\n{}",
+                    model.to_string(), hint,
+                ))),
+            )
+        };
+
+        let results = vec![InlineQueryResult::Article(msg)];
+
+        self.bot.answer_inline_query(&q.id, results).send().await?;
         Ok(())
     }
 
@@ -149,15 +208,25 @@ impl Bot {
     }
 
     pub async fn run_active(&self) -> anyhow::Result<()> {
-        let handler = dptree::entry().branch(Update::filter_message().endpoint({
-            let bot = self.clone();
+        let handler = dptree::entry()
+            .branch(Update::filter_inline_query().endpoint({
+                let bot = self.clone();
 
-            move |_: teloxide::Bot, msg: Message, me: Me| {
-                let bot = bot.clone();
+                move |_: teloxide::Bot, q: InlineQuery| {
+                    let bot = bot.clone();
 
-                async move { bot.handle_command(msg, me).await }
-            }
-        }));
+                    async move { bot.handle_inline(q).await }
+                }
+            }))
+            .branch(Update::filter_message().endpoint({
+                let bot = self.clone();
+
+                move |_: teloxide::Bot, msg: Message, me: Me| {
+                    let bot = bot.clone();
+
+                    async move { bot.handle_command(msg, me).await }
+                }
+            }));
 
         tracing::info!("Bot is running...");
 
