@@ -64,11 +64,17 @@ impl SionClient {
             .await?;
 
         let response_text = response.text().await?;
-        let response_body: ChatCompletionResponse = serde_json::from_str(&response_text)?;
+        let response_body: ChatCompletionResponse = match serde_json::from_str(&response_text) {
+            Ok(body) => body,
+            Err(e) => {
+                tracing::error!("failed to parse response: {e}");
+                return Err(anyhow::anyhow!("Error: {response_text}"));
+            }
+        };
         if let Some(choice) = response_body.choices.first() {
             Ok(choice.message.content.clone())
         } else {
-            Err(anyhow::anyhow!("Error: {response_text}"))
+            Err(anyhow::anyhow!("No completion found"))
         }
     }
 }
