@@ -29,6 +29,9 @@ cd target/release
 >```
 - /lookmodel
 
+#### Inline
+- Query should end with '喵'
+
 ### Config File
 `$config_dir/sion/config.kdl` if not specified
 
