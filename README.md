@@ -1,5 +1,8 @@
 GPT Bot powered by [Github Models](https://github.com/marketplace/models)
 
+> [!IMPORTANT]
+> You should read [this](https://docs.github.com/en/github-models/prototyping-with-ai-models).
+
 ### Supported Models
 - o1-preview 
 - o1-mini
