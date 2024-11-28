@@ -1611,6 +1611,7 @@ dependencies = [
  "miette 7.2.0",
  "reqwest",
  "serde",
+ "serde_json",
  "teloxide",
  "tokio",
  "tracing",

@@ -63,11 +63,12 @@ impl SionClient {
             .send()
             .await?;
 
-        let response_body: ChatCompletionResponse = response.json().await?;
+        let response_text = response.text().await?;
+        let response_body: ChatCompletionResponse = serde_json::from_str(&response_text)?;
         if let Some(choice) = response_body.choices.first() {
             Ok(choice.message.content.clone())
         } else {
-            Err(anyhow::anyhow!("No response received"))
+            Err(anyhow::anyhow!("Error: {response_text}"))
         }
     }
 }

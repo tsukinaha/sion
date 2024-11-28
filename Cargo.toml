@@ -13,6 +13,7 @@ knuffel = "3.2.0"
 miette = "7.2.0"
 reqwest = { version = "0.12", default-features = false, features = ["http2", "rustls-tls", "rustls-tls-native-roots"] }
 serde = "1.0.215"
+serde_json = "1.0.133"
 teloxide = { git = "https://github.com/teloxide/teloxide.git", default-features = false, features = ["rustls", "macros"] }
 tokio = { version = "1", features = ["macros"] }
 tracing = "0.1.40"
