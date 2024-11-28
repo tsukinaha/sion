@@ -17,9 +17,9 @@ cd target/release
 ```
 
 #### Commands
-- /help
-- /meow \<prompt\>
-- /model \<model\> - change model
+- `/help`
+- `/meow \<prompt\>`
+- `/model \<model\> - change model`
 
 >```
 >"4o" => OpenAIGPT4o,
