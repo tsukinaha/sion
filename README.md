@@ -27,7 +27,7 @@ cd target/release
 >"o1-preview" | "o1p" => OpenAIGPTo1Preview,
 >"o1-mini" | "o1m" => OpenAIGPTo1Mini,
 >```
-- /lookmodel
+- `/lookmodel`
 
 #### Inline
 - Query should end with '喵'
