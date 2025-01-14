@@ -14,6 +14,7 @@ fn load_config(args: Args) -> config::SionConfig {
         std::process::exit(1);
     })
 }
+
 pub async fn run() -> anyhow::Result<()> {
     let args = Args::parse();
     args.init_debug();

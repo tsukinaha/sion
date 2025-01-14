@@ -11,6 +11,7 @@ pub enum Model {
     OpenAIGPT4oMini,
     OpenAIGPTo1Preview,
     OpenAIGPTo1Mini,
+    OpenAIGPTo1,
     Invalid,
 }
 
@@ -27,6 +28,7 @@ impl From<&str> for Model {
             "4o-mini" | "4om" => Self::OpenAIGPT4oMini,
             "o1-preview" | "o1p" => Self::OpenAIGPTo1Preview,
             "o1-mini" | "o1m" => Self::OpenAIGPTo1Mini,
+            "o1" => Self::OpenAIGPTo1,
             _ => Self::Invalid,
         }
     }
@@ -39,6 +41,7 @@ impl Display for Model {
             Self::OpenAIGPT4oMini => write!(f, "gpt-4o-mini"),
             Self::OpenAIGPTo1Preview => write!(f, "o1-preview"),
             Self::OpenAIGPTo1Mini => write!(f, "o1-mini"),
+            Self::OpenAIGPTo1 => write!(f, "o1"),
             Self::Invalid => panic!("Invalid model"),
         }
     }
