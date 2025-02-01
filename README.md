@@ -6,8 +6,11 @@ GPT Bot powered by [Github Models](https://github.com/marketplace/models)
 ### Supported Models
 - o1-preview 
 - o1-mini
+- o1
 - gpt-4o
 - gpt-4o-mini
+- o3-mini
+- deepseek-r1
 
 <img src="./docs/ss.png" alt="ss" width="200"/>
 
