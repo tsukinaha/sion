@@ -32,6 +32,7 @@ struct ChatCompletionRequest {
 impl SionClient {
     pub fn new(config: ClientConfig) -> Self {
         let client = Client::builder()
+            .timeout(Duration::from_secs(1000))
             .https_only(true)
             .http2_adaptive_window(true)
             .build()
