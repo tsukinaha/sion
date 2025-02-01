@@ -16,4 +16,6 @@ pub enum Command {
     Model(String),
     #[command(description = "look at the current model.")]
     LookModel,
+    #[command(description = "list all models")]
+    List
 }
