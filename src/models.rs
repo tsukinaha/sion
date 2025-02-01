@@ -47,7 +47,7 @@ impl Display for Model {
             Self::OpenAIGPTo1Mini => write!(f, "o1-mini"),
             Self::OpenAIGPTo1 => write!(f, "o1"),
             Self::DeepSeekR1 => write!(f, "DeepSeek-R1"),
-            Self::OpenAIGPTo1Mini => write!(f, "o3-mini"),
+            Self::OpenAIGPTo3Mini => write!(f, "o3-mini"),
             Self::Invalid => panic!("Invalid model"),
         }
     }
