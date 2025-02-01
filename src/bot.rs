@@ -95,8 +95,18 @@ impl Bot {
             Command::Meow(prompt) => self.handle_prompt(msg, prompt).await?,
             Command::Model(model) => self.handle_model(msg, model).await?,
             Command::LookModel => self.handle_look_model(msg).await?,
+            Command::List => self.handle_list().await?,
         }
 
+        Ok(())
+    }
+
+    async fn handle_list(&self) -> anyhow::Result<()> {
+        self.bot
+            .send_message(msg.chat.id, "4o\n4o-mini\no1\no1-preview\no1-mini\ndeepseek-r1\no3-mini".to_string())
+            .await?;
+
+        tracing::info!("send help done");
         Ok(())
     }
 
