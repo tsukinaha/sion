@@ -32,6 +32,9 @@ cd target/release
 >"4o-mini" | "4om" => OpenAIGPT4oMini,
 >"o1-preview" | "o1p" => OpenAIGPTo1Preview,
 >"o1-mini" | "o1m" => OpenAIGPTo1Mini,
+>"o1" => Self::OpenAIGPTo1,
+>"o3-mini" | "o3m" => Self::OpenAIGPTo3Mini,
+>"deepseek-r1" | "ds" => Self::DeepSeekR1,
 >```
 - `/lookmodel`
 
