@@ -12,6 +12,8 @@ pub enum Model {
     OpenAIGPTo1Preview,
     OpenAIGPTo1Mini,
     OpenAIGPTo1,
+    DeepSeekR1,
+    OpenAIGPTo3Mini,
     Invalid,
 }
 
@@ -29,6 +31,8 @@ impl From<&str> for Model {
             "o1-preview" | "o1p" => Self::OpenAIGPTo1Preview,
             "o1-mini" | "o1m" => Self::OpenAIGPTo1Mini,
             "o1" => Self::OpenAIGPTo1,
+            "o3-mini" | "o3m" => Self::OpenAIGPTo3Mini,
+            "deepseek-r1" | "ds" => Self::DeepSeekR1,
             _ => Self::Invalid,
         }
     }
@@ -42,6 +46,8 @@ impl Display for Model {
             Self::OpenAIGPTo1Preview => write!(f, "o1-preview"),
             Self::OpenAIGPTo1Mini => write!(f, "o1-mini"),
             Self::OpenAIGPTo1 => write!(f, "o1"),
+            Self::DeepSeekR1 => write!(f, "DeepSeek-R1"),
+            Self::OpenAIGPTo1Mini => write!(f, "o3-mini"),
             Self::Invalid => panic!("Invalid model"),
         }
     }
